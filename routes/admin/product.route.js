@@ -3,8 +3,9 @@ const router = express.Router();
 
 // multer package for upload files.
 const multer = require("multer");
-const storageMulter = require("../../helpers/storageMulter");
-const upload = multer({ storage: storageMulter() });
+const upload = multer();
+
+const uploadCloud = require("../../middlewares/admin/uploadCloud.middleware");
 
 const controller = require("../../controllers/admin/product.controller");
 
@@ -23,6 +24,7 @@ router.get("/create", controller.create);
 router.post(
     "/create",
     upload.single("thumbnail"),
+    uploadCloud.upload,
     validate.createPost,
     controller.createPost
 );
