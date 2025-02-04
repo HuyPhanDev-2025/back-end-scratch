@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 const route = require("./routes/client/index.route");
 const adMinRoute = require("./routes/admin/index.route");
 
@@ -30,6 +31,14 @@ app.use(cookieParser("TestFlash"));
 app.use(session({ cookie: { maxAge: 60000 } }));
 app.use(flash());
 // ======= End Flash =======
+
+// ======= Tiny MCE for edit, like a small WORD =======
+app.use(
+    "/tinymce",
+    express.static(path.join(__dirname, "node_modules", "tinymce"))
+);
+
+// ======= End Tiny MCE =======
 
 // App locals variables, just for files .pug
 app.locals.prefixAdmin = systemConfig.prefixAdmin;

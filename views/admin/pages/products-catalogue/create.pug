@@ -2,70 +2,41 @@ extends ../../layouts/default.pug
 include ../../mixins/alert.pug
 
 block main 
+    h1(class="mb-4") Thêm mới danh mục sản phẩm 
+
     +alert-error(5000)
 
-    h1(class="mb-4") Thêm mới sản phẩm 
-
     form(
-        action=`${prefixAdmin}/products/create`
+        action=`${prefixAdmin}/products-catalogue/create`
         method="post"
-        id="form-create-product"
         enctype="multipart/form-data"
-    ) 
+    )
+
         div(class="form-group")
-            label(for="title") Tiêu đề
+            label(form="title") Tiêu đề
             input(
                 type="text"
-                name="title"
                 class="form-control"
+                name="title"
                 id="title"
                 required
             )
         div(class="form-group")
-            label(for="desc") Mô tả
+            label(form="parent_id") Danh mục cha
+            input(
+                type="text"
+                class="form-control"
+                name="parent_id"
+                id="parent_id"
+            )
+        div(class="form-group")
+            label(form="desc") Mô tả
             textarea(
+                type="text"
+                class="form-control textarea-mce"
                 name="description"
-                class="form-control textarea-mce"
-                rows="5"
                 id="desc"
-            ) 
-        div(class="form-group")
-            label(for="content") Nội dung
-            textarea(
-                name="content"
-                class="form-control textarea-mce"
-                rows="5"
-                id="content"
-            )  
-        div(class="form-group")
-            label(for="price") Giá
-            input(
-                type="number"
-                name="price"
-                class="form-control"
-                value="0"
-                id="price"
-            ) 
-        div(class="form-group")
-            label(for="discount") % Giảm giá
-            input(
-                type="number"
-                name="discountPercentage"
-                class="form-control"
-                value="0"
-                min="0"
-                id="discount"
-            ) 
-        div(class="form-group")
-            label(for="stock") Số lượng
-            input(
-                type="number"
-                name="stock"
-                class="form-control"
-                value="0"
-                min="0"
-                id="stock"
-            ) 
+            )
         div(
             class="form-group"
             upload-image
@@ -87,39 +58,40 @@ block main
                     class="image-preview"
                 )
                 span(class="close-image-preview") X
+
         div(class="form-group")
             label(for="position") Vị trí
             input(
                 type="number"
-                name="position"
                 class="form-control"
+                id="position"
+                name="position"
                 placeholder="Tự động tăng"
                 min="1"
-                id="position"
-            ) 
-        div(class="form-group form-check form-check-inline")
-            input(
-                type="radio"
-                class="form-check-input"
-                id="statusActive"
-                name="status"
-                value="active"
             )
-            label(for="statusActive" class="form-check-label") Hoạt động
+
         div(class="form-group form-check form-check-inline")
             input(
                 type="radio"
                 class="form-check-input"
-                id="statusInActive"
                 name="status"
+                id="statusActive"
+                value="active"
+                checked
+            )
+            label(form="statusActive" class="form-check-label") Hoạt động
+        div(class="form-group form-check form-check-inline")
+            input(
+                type="radio"
+                class="form-check-input"
+                name="status"
+                id="statusInActive"
                 value="inactive"
             )
-            label(for="statusInActive" class="form-check-label") Dừng hoạt động
+            label(form="statusInActive" class="form-check-label") Dừng hoạt động
 
         div(class="form-group")
             button(
                 type="submit"
                 class="btn btn-primary"
             ) Tạo mới
-
-    script(src="/admin/js/product.js") 
