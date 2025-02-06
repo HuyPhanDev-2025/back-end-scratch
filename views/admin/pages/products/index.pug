@@ -26,14 +26,14 @@ block main
 		.card-body
 			.row
 				.col-4
-					+sort() 
+					+sort(situation) 
 					
 	.card.mb-3 
 		.card-header Danh sách
 		.card-body
 			.row 
 				.col-8
-					+form-change-multi(`${prefixAdmin}/products/change-multi?_method=PATCH`)
+					+form-change-multi(`${prefixAdmin}/products-catalogue/change-multi?_method=PATCH`)
 				.col-4 
 					a(
 						href=`${prefixAdmin}/products/create`

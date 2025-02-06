@@ -11,6 +11,12 @@ const validate = require("../../validates/admin/product-catalogue.validate");
 
 router.get("/", controller.index);
 
+router.patch("/change-status/:status/:id", controller.changeStatus);
+
+router.patch("/change-multi", controller.changeMulti);
+
+router.delete("/delete/:id", controller.deleteItem);
+
 router.get("/create", controller.create);
 
 router.post(

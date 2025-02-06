@@ -65,6 +65,7 @@ module.exports.index = async (req, res) => {
         statusFilter: statusFilter,
         keyword: objectSearch.keyword,
         pagination: objectPagination,
+        situation: "products",
     });
 };
 

@@ -28,5 +28,7 @@ module.exports = (query) => {
         statusFilter[index].class = "active";
     }
 
+    // console.log(statusFilter);
+
     return statusFilter;
 };
