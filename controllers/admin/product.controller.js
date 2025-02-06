@@ -1,4 +1,5 @@
 const Product = require("../../models/product.model");
+const ProductCatalogue = require("../../models/product-catalogue.model");
 
 const systemConfig = require("../../config/system");
 
@@ -7,6 +8,8 @@ const statusFilterHelper = require("../../helpers/statusFilter");
 const searchHelper = require("../../helpers/search");
 
 const paginationHelper = require("../../helpers/pagination");
+
+const createTreeHelper = require("../../helpers/createTree");
 
 // [GET] /admin/products
 module.exports.index = async (req, res) => {
@@ -146,8 +149,16 @@ module.exports.deleteItem = async (req, res) => {
 
 // [GET] /admin/products/create
 module.exports.create = async (req, res) => {
+    let find = {
+        deleted: false,
+    };
+
+    const catalogs = await ProductCatalogue.find(find);
+
+    const newCatalogs = createTreeHelper.createTree(catalogs);
     res.render("admin/pages/products/create", {
         pageTitle: "Thêm mới sản phẩm",
+        catalogs: newCatalogs,
     });
 };
 
@@ -178,11 +189,16 @@ module.exports.edit = async (req, res) => {
             _id: req.params.id,
         };
 
+        const catalogs = await ProductCatalogue.find({ deleted: false });
+
+        console.log(catalogs);
+
         const product = await Product.findOne(find);
 
         res.render("admin/pages/products/edit", {
             pageTitle: "Chỉnh sửa sản phẩm",
             product: product,
+            catalogs: catalogs,
         });
     } catch (error) {
         res.redirect(`${systemConfig.prefixAdmin}/products`);
