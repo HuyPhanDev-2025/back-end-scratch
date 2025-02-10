@@ -1,51 +1,57 @@
 extends ../../layouts/default.pug
 
-block main 
-    h1 Permissions Page
+block main
+    if(role.permissions.includes(`roles_view`)) 
+        h1 Permissions Page
 
-    .card.mb-3 
-        .card-header Danh mục sản phẩm
-        .card-body
-            .row
-                .col-6 
-                .col-4.text-right 
-                    a(
-                        href=`${prefixAdmin}/roles/create`
-                        class="btn btn-outline-success"
-                    ) + Thêm mới
+        .card.mb-3 
+            .card-header Danh mục sản phẩm
+            .card-body
+                .row
+                    .col-6 
+                    .col-4.text-right
+                        if(role.permissions.includes(`roles_create`)) 
+                            a(
+                                href=`${prefixAdmin}/roles/create`
+                                class="btn btn-outline-success"
+                            ) + Thêm mới
 
-        table(
-                class="table table-hover table-sm"
-                checkbox-multi
-            ) 
-                thead 
-                    tr
-                        th STT
-                        th Nhóm quyền
-                        th Mô tả quyền
-                        th Hành động 
-                
-                tbody
-                    if records
-                        each item, index in records
-                            tr
-                                td #{index + 1}
-                                td #{item.title}
-                                td #{item.description}
-                                td 
-                                    a(
-                                        href=`${prefixAdmin}/roles/detail/${item.id}`
-                                        class="btn btn-secondary btn-sm"
-                                    ) Chi tiết 
-                                    a(
-                                        href=`${prefixAdmin}/roles/edit/${item.id}`
-                                        class="btn btn-warning btn-sm"
-                                    ) Sửa 
-                                    button(
-                                        class="btn btn-danger btn-sm ml-l"
-                                        data-id=item.id
-                                        button-delete
-                                    ) Xóa
-                        else 
-                            tr 
-                                td(colspan="4" class="text-center") Chưa có nhóm quyền nào được tạo
+            table(
+                    class="table table-hover table-sm"
+                    checkbox-multi
+                ) 
+                    thead 
+                        tr
+                            th STT
+                            th Nhóm quyền
+                            th Mô tả quyền
+                            th Hành động 
+                    
+                    tbody
+                        if records
+                            each item, index in records
+                                tr
+                                    td #{index + 1}
+                                    td #{item.title}
+                                    td #{item.description}
+                                    td 
+                                        a(
+                                            href=`${prefixAdmin}/roles/detail/${item.id}`
+                                            class="btn btn-secondary btn-sm"
+                                        ) Chi tiết 
+                                        if(role.permissions.includes(`roles_edit`))
+                                            a(
+                                                href=`${prefixAdmin}/roles/edit/${item.id}`
+                                                class="btn btn-warning btn-sm"
+                                            ) Sửa
+                                        if(role.permissions.includes(`roles_delete`)) 
+                                            button(
+                                                class="btn btn-danger btn-sm ml-l"
+                                                data-id=item.id
+                                                button-delete
+                                            ) Xóa
+                            else 
+                                tr 
+                                    td(colspan="4" class="text-center") Chưa có nhóm quyền nào được tạo
+    else 
+        h1 Bạn không có quyền truy cập                                    

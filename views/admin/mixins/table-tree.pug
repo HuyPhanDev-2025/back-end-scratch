@@ -42,15 +42,17 @@ mixin table-tree(items, level = 1, mask)
                     a(
                         href=`${prefixAdmin}/products-catalogue/detail/${item.id}`
                         class="btn btn-secondary btn-sm"
-                    ) Chi tiết 
-                    a(
-                        href=`${prefixAdmin}/products-catalogue/edit/${item.id}`
-                        class="btn btn-warning btn-sm"
-                    ) Sửa 
-                    button(
-                        class="btn btn-danger btn-sm ml-l"
-                        data-id=item.id
-                        button-delete
-                    ) Xóa
+                    ) Chi tiết
+                    if(role.permissions.includes(`product_catalog_edit`)) 
+                        a(
+                            href=`${prefixAdmin}/products-catalogue/edit/${item.id}`
+                            class="btn btn-warning btn-sm"
+                        ) Sửa 
+                    if(role.permissions.includes(`product_catalog_delete`)) 
+                        button(
+                            class="btn btn-danger btn-sm ml-l"
+                            data-id=item.id
+                            button-delete
+                        ) Xóa
         if item.children && item.children.length > 0
                 +table-tree(item.children, level + 1, mask)
