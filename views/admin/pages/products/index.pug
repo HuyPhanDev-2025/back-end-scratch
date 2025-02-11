@@ -5,6 +5,7 @@ include ../../mixins/pagination.pug
 include ../../mixins/form-change-multi.pug
 include ../../mixins/alert.pug
 include ../../mixins/sort.pug
+include ../../mixins/moment.pug
 
 block main 
 	if(role.permissions.includes(`product_view`))
@@ -35,7 +36,7 @@ block main
 				.row
 					if(role.permissions.includes(`product_edit`)) 
 						.col-8
-							+form-change-multi(`${prefixAdmin}/products-catalogue/change-multi?_method=PATCH`)
+							+form-change-multi(`${prefixAdmin}/products/change-multi?_method=PATCH`)
 					.col-4
 						if(role.permissions.includes(`product_create`)) 
 							a(
@@ -57,6 +58,7 @@ block main
 							th Giá
 							th Vị trí
 							th Trạng thái
+							th Người tạo
 							th Hành động 
 					
 					tbody 
@@ -98,6 +100,11 @@ block main
 										data-id=item.id
 										button-change-status	
 										class="badge badge-danger") Dừng hoạt động
+								td 
+									p #{item.accountFullname}
+									p 
+										+formatDateTime(item.createdBy.createdAt)
+									
 								td 
 									a(
 										href=`${prefixAdmin}/products/detail/${item.id}`

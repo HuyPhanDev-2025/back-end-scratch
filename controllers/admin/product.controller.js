@@ -1,4 +1,5 @@
 const Product = require("../../models/product.model");
+const Account = require("../../models/account.model");
 const ProductCatalogue = require("../../models/product-catalogue.model");
 
 const systemConfig = require("../../config/system");
@@ -61,6 +62,14 @@ module.exports.index = async (req, res) => {
         .skip(objectPagination.skip);
 
     // ======= End Sort =======
+    for (const product of products) {
+        const user = await Account.findOne({
+            _id: product.createdBy.account_id,
+        });
+        if (user) {
+            product.accountFullname = user.fullName;
+        }
+    }
 
     res.render("admin/pages/products/index", {
         pageTitle: "Product List Page",
@@ -107,7 +116,13 @@ module.exports.changeMulti = async (req, res) => {
         case "delete-all":
             await Product.updateMany(
                 { _id: { $in: ids } },
-                { deleted: true, deletedAt: new Date() }
+                {
+                    deleted: true,
+                    deletedBy: {
+                        account_id: res.locals.user.id,
+                        deletedAt: new Date(),
+                    },
+                }
             );
             req.flash(
                 "success",
@@ -141,7 +156,13 @@ module.exports.deleteItem = async (req, res) => {
     // await Product.deleteOne({ _id: id });
     await Product.updateOne(
         { _id: id },
-        { deleted: true, deletedAt: new Date() }
+        {
+            deleted: true,
+            deletedBy: {
+                account_id: res.locals.user.id,
+                deletedAt: new Date(),
+            },
+        }
     );
 
     res.redirect("back");
@@ -149,6 +170,8 @@ module.exports.deleteItem = async (req, res) => {
 
 // [GET] /admin/products/create
 module.exports.create = async (req, res) => {
+    console.log(res.locals.user);
+
     let find = {
         deleted: false,
     };
@@ -174,6 +197,10 @@ module.exports.createPost = async (req, res) => {
     } else {
         req.body.position = parseInt(req.body.position);
     }
+
+    req.body.createdBy = {
+        account_id: res.locals.user.id,
+    };
 
     const product = new Product(req.body);
     await product.save();

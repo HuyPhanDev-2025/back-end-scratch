@@ -6,6 +6,7 @@ const adMinRoute = require("./routes/admin/index.route");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const flash = require("express-flash");
+const moment = require("moment");
 
 require("dotenv").config();
 
@@ -42,6 +43,7 @@ app.use(
 
 // App locals variables, just for files .pug
 app.locals.prefixAdmin = systemConfig.prefixAdmin;
+app.locals.moment = moment;
 
 console.log(__dirname);
 
