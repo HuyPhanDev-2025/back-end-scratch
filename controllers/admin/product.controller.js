@@ -63,13 +63,25 @@ module.exports.index = async (req, res) => {
 
     // ======= End Sort =======
     for (const product of products) {
+        // Retrieve info create user
         const user = await Account.findOne({
             _id: product.createdBy.account_id,
         });
         if (user) {
             product.accountFullname = user.fullName;
         }
+        // Retrieve info change person
+        const updated = product.updatedBy.slice(-1)[0];
+        if (updated) {
+            const userUpdated = await Account.findOne({
+                _id: updated.account_id,
+            });
+
+            updated.accountFullName = userUpdated.fullName;
+        }
     }
+
+    console.log(products[0].updatedBy[7].accountFullName);
 
     res.render("admin/pages/products/index", {
         pageTitle: "Product List Page",
@@ -86,7 +98,15 @@ module.exports.changeStatus = async (req, res) => {
     const status = req.params.status;
     const id = req.params.id;
 
-    await Product.updateOne({ _id: id }, { status: status });
+    const updated = {
+        account_id: res.locals.user.id,
+        updatedAt: new Date(),
+    };
+
+    await Product.updateOne(
+        { _id: id },
+        { status: status, $push: { updatedBy: updated } }
+    );
 
     req.flash("success", `Cập nhật trạng thái sản phẩm thành công`);
 
@@ -98,16 +118,27 @@ module.exports.changeMulti = async (req, res) => {
     const type = req.body.type;
     const ids = req.body.ids.split(", ");
 
+    const updated = {
+        account_id: res.locals.user.id,
+        updatedAt: new Date(),
+    };
+
     switch (type) {
         case "active":
-            await Product.updateMany({ _id: { $in: ids } }, { status: type });
+            await Product.updateMany(
+                { _id: { $in: ids } },
+                { status: type, $push: { updatedBy: updated } }
+            );
             req.flash(
                 "success",
                 `Cập nhật trạng thái ${ids.length} sản phẩm thành công`
             );
             break;
         case "inactive":
-            await Product.updateMany({ _id: { $in: ids } }, { status: type });
+            await Product.updateMany(
+                { _id: { $in: ids } },
+                { status: type, $push: { updatedBy: updated } }
+            );
             req.flash(
                 "success",
                 `Cập nhật trạng thái ${ids.length} sản phẩm thành công`
@@ -218,8 +249,6 @@ module.exports.edit = async (req, res) => {
 
         const catalogs = await ProductCatalogue.find({ deleted: false });
 
-        console.log(catalogs);
-
         const product = await Product.findOne(find);
 
         res.render("admin/pages/products/edit", {
@@ -244,7 +273,18 @@ module.exports.editPatch = async (req, res) => {
     }
 
     try {
-        await Product.updateOne({ _id: req.params.id }, req.body);
+        const updated = {
+            account_id: res.locals.user.id,
+            updatedAt: new Date(),
+        };
+
+        await Product.updateOne(
+            { _id: req.params.id },
+            {
+                ...req.body,
+                $push: { updatedBy: updated },
+            }
+        );
         req.flash("success", "Cập nhật thành công");
     } catch (error) {
         req.flash("error", "Cập nhật thất bại");

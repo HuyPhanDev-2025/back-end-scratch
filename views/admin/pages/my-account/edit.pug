@@ -1,0 +1,103 @@
+extends ../../layouts/default.pug
+include ../../mixins/alert.pug
+
+
+block main 
+    h1(class="mb-4") Chỉnh sửa thông tin cá nhân 
+
+    +alert-error(5000)
+    +alert-success(5000)
+
+    form(
+        action=`${prefixAdmin}/my-account/edit?_method=PATCH`
+        method="post"
+        enctype="multipart/form-data"
+    )
+
+        div(class="form-group")
+            label(form="fullName") Họ tên *
+            input(
+                type="text"
+                class="form-control"
+                name="fullName"
+                id="fullName"
+                value=user.fullName
+                required
+            )
+        div(class="form-group")
+            label(form="email") Email *
+            input(
+                type="text"
+                class="form-control"
+                name="email"
+                id="email"
+                value=user.email
+                required
+            )
+        div(class="form-group")
+            label(form="password") Mật khẩu *
+            input(
+                type="password"
+                class="form-control"
+                name="password"
+                id="password"
+                value= user.password
+                required
+            )
+        div(class="form-group")
+            label(form="phone") Số điện thoại
+            input(
+                type="text"
+                class="form-control"
+                name="phone"
+                id="phone"
+                value=user.phone
+            )
+                    
+        div(
+            class="form-group"
+            upload-image
+        )
+            label(for="avatar") Avatar
+            input(
+                type="file"
+                name="avatar"
+                class="form-control-file"
+                id="avatar"
+                accept="image/*"
+                upload-image-input
+            )
+            div(class="image-preview-group") 
+                img(
+                    src=user.avatar
+                    alt="your-image"
+                    upload-image-preview
+                    class="image-preview"
+                )
+                span(class="close-image-preview") X
+
+        div(class="form-group form-check form-check-inline")
+            input(
+                type="radio"
+                class="form-check-input"
+                name="status"
+                id="statusActive"
+                value="active"
+                checked
+            )
+            label(form="statusActive" class="form-check-label") Hoạt động
+        div(class="form-group form-check form-check-inline")
+            input(
+                type="radio"
+                class="form-check-input"
+                name="status"
+                id="statusInActive"
+                value="inactive"
+            )
+            label(form="statusInActive" class="form-check-label") Dừng hoạt động
+
+        div(class="form-group")
+            button(
+                type="submit"
+                class="btn btn-primary"
+            ) Cập nhật

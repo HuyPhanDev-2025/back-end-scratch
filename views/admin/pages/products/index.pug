@@ -59,6 +59,7 @@ block main
 							th Vị trí
 							th Trạng thái
 							th Người tạo
+							th Người sửa
 							th Hành động 
 					
 					tbody 
@@ -104,6 +105,12 @@ block main
 									p #{item.accountFullname}
 									p 
 										+formatDateTime(item.createdBy.createdAt)
+								td 
+									- const updated = item.updatedBy.slice(-1)[0]
+									if(updated)
+										p #{updated.accountFullName}
+										p 
+											+formatDateTime(updated.updatedAt)
 									
 								td 
 									a(

@@ -1,0 +1,43 @@
+extends ../../layouts/default.pug
+include ../../mixins/alert.pug
+
+block main 
+    h1(class="mb-4") Thông tin tài khoản
+
+
+    if (account.fullName)
+        p Họ tên: <b>#{account.fullName}</b>
+    
+    if (account.email)
+        p Email: <b>#{account.email}</b>
+    
+    if (account.phone)
+        p Số điện thoại: <b>#{account.phone}</b>
+
+    if (account.avatar)
+        img(
+            src=account.avatar, alt=account.title
+            width="150px"
+            height="auto"
+            class="mb-4"
+        )
+    else 
+        img(
+            src="/admin/images/avatar.png", alt=account.title
+            width="150px"
+            height="auto"
+            class="mb-4"
+        )
+    
+    if (account.role_id)
+        p Nhóm quyền: <b>#{roleAccount.title}</b>
+    
+    span 
+        p Trạng thái: 
+            if (account.status)
+                if (account.status == "active")
+                    span(class="badge badge-success") Hoạt động
+                else
+                    span(class="btn") Dừng hoạt động
+            else 
+                span <b>Không rõ</b>
