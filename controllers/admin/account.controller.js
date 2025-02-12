@@ -118,14 +118,10 @@ module.exports.detail = async (req, res) => {
 
     const account = await Account.findOne(find);
 
-    console.log(account.id);
-
     const roleAccount = await Role.findOne({
         deleted: false,
         _id: account.role_id,
     });
-
-    console.log(roleAccount);
 
     res.render("admin/pages/accounts/detail", {
         pageTitle: "Thông tin tài khoản",
